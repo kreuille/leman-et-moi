@@ -758,8 +758,9 @@
         </nav>
     </div>
 
-    <!-- Son nature (Ruisseau apaisant) hébergé par la bibliothèque officielle Google -->
-    <audio id="spa-audio" loop crossorigin="anonymous" preload="auto">
+    <!-- Son nature : Format .mp3 officiel couplé à un fallback .ogg pour 100% de compatibilité -->
+    <audio id="spa-audio" loop preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2022/11/08/audio_8e727bc241.mp3" type="audio/mpeg">
         <source src="https://actions.google.com/sounds/v1/water/babbling_brook.ogg" type="audio/ogg">
     </audio>
 
@@ -770,11 +771,19 @@
         function toggleAudio() {
             const waves = document.querySelector('.audio-waves');
             if(!playing) {
-                // Le catch permet d'éviter l'erreur JS si le navigateur bloque l'autoplay initial
-                audio.play().catch(error => {
-                    console.log("La lecture audio a été retardée par le navigateur.", error);
-                });
-                audio.volume = 0.3; // Volume ajusté pour le bruit de l'eau
+                audio.volume = 0.4;
+                // Lance le son directement
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        // La lecture a réussi
+                    })
+                    .catch(error => {
+                        console.log("Lecture bloquée par le navigateur:", error);
+                    });
+                }
+                
                 document.getElementById('audio-text').innerText = "Sérénité Active";
                 if(waves) waves.style.display = "block";
             } else {
