@@ -762,40 +762,41 @@
         </nav>
     </div>
 
-    <!-- Son nature & musique douce ultra-fiable -->
+    <!-- Son nature & musique douce sur serveurs ultra-stables (sans blocage CORS) -->
     <audio id="spa-audio" loop preload="auto">
-        <!-- Musique douce avec bruits de la nature (Pixabay) -->
-        <source src="https://cdn.pixabay.com/download/audio/2021/11/25/audio_91b3cb80bc.mp3" type="audio/mpeg">
-        <!-- Fallback : Ruisseau apaisant -->
+        <!-- Source 1 : Mixkit (Rivière zen très fiable) -->
+        <source src="https://assets.mixkit.co/active_storage/sfx/2515/2515-preview.mp3" type="audio/mpeg">
+        <!-- Fallback 2 : Archive.org (Eau calme) -->
+        <source src="https://ia600406.us.archive.org/16/items/calm-water/calm-water.mp3" type="audio/mpeg">
+        <!-- Fallback 3 : Wikimedia -->
         <source src="https://upload.wikimedia.org/wikipedia/commons/6/61/Water_stream.ogg" type="audio/ogg">
     </audio>
 
     <script>
         const audio = document.getElementById('spa-audio');
-        let playing = false;
 
         function toggleAudio() {
             const waves = document.querySelector('.audio-waves');
+            const textEl = document.getElementById('audio-text');
             
-            if(!playing) {
+            // On utilise l'état réel du lecteur (audio.paused) plutôt qu'une variable
+            if(audio.paused) {
                 audio.volume = 0.5;
                 const playPromise = audio.play();
                 
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
-                        document.getElementById('audio-text').innerText = "Sérénité Active";
+                        textEl.innerText = "Sérénité Active";
                         if(waves) waves.style.display = "block";
-                        playing = true;
                     }).catch(e => {
-                        console.log("Son bloqué:", e);
-                        document.getElementById('audio-text').innerText = "Son bloqué";
+                        console.log("Son bloqué par le navigateur:", e);
+                        textEl.innerText = "Cliquer pour le son";
                     });
                 }
             } else {
                 audio.pause();
-                document.getElementById('audio-text').innerText = "Sons du Léman";
+                textEl.innerText = "Sons du Léman";
                 if(waves) waves.style.display = "none";
-                playing = false;
             }
         }
 
@@ -820,19 +821,18 @@
         }
 
         function startExperience() {
-            // 1. FORCER LE SON EN PREMIER (Indispensable pour iPhone/Safari)
-            if(!playing) {
+            // 1. FORCER LE SON EN PREMIER
+            if(audio.paused) {
                 audio.volume = 0.5;
                 const playPromise = audio.play();
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
-                        playing = true;
                         document.getElementById('audio-text').innerText = "Sérénité Active";
                         const waves = document.querySelector('.audio-waves');
                         if(waves) waves.style.display = "block";
                     }).catch(e => {
                         console.log("Son bloqué:", e);
-                        document.getElementById('audio-text').innerText = "Son bloqué";
+                        document.getElementById('audio-text').innerText = "Cliquer en haut pour le son";
                     });
                 }
             }
