@@ -758,9 +758,9 @@
         </nav>
     </div>
 
-    <!-- Son zen premium et nature (eau, méditation, oiseaux) hébergé par Pixabay -->
+    <!-- Son nature (Ruisseau apaisant) hébergé par la bibliothèque officielle Google -->
     <audio id="spa-audio" loop crossorigin="anonymous" preload="auto">
-        <source src="https://cdn.pixabay.com/audio/2021/11/25/audio_91b3cb80bc.mp3" type="audio/mpeg">
+        <source src="https://actions.google.com/sounds/v1/water/babbling_brook.ogg" type="audio/ogg">
     </audio>
 
     <script>
@@ -771,8 +771,10 @@
             const waves = document.querySelector('.audio-waves');
             if(!playing) {
                 // Le catch permet d'éviter l'erreur JS si le navigateur bloque l'autoplay initial
-                audio.play().catch(error => console.log("La lecture audio a été retardée par le navigateur.", error));
-                audio.volume = 0.4; // Volume augmenté pour être bien audible
+                audio.play().catch(error => {
+                    console.log("La lecture audio a été retardée par le navigateur.", error);
+                });
+                audio.volume = 0.3; // Volume ajusté pour le bruit de l'eau
                 document.getElementById('audio-text').innerText = "Sérénité Active";
                 if(waves) waves.style.display = "block";
             } else {
