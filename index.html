@@ -758,9 +758,9 @@
         </nav>
     </div>
 
-    <!-- Son nature : Format .mp3 officiel couplé à un fallback .ogg pour 100% de compatibilité -->
+    <!-- Son d'ambiance 100% fiable, format MP3, sans restriction de domaine -->
     <audio id="spa-audio" loop preload="auto">
-        <source src="https://cdn.pixabay.com/download/audio/2022/11/08/audio_8e727bc241.mp3" type="audio/mpeg">
+        <source src="https://cdn.freesound.org/previews/183/183881_3106364-lq.mp3" type="audio/mpeg">
         <source src="https://actions.google.com/sounds/v1/water/babbling_brook.ogg" type="audio/ogg">
     </audio>
 
@@ -770,28 +770,20 @@
 
         function toggleAudio() {
             const waves = document.querySelector('.audio-waves');
+            
             if(!playing) {
-                audio.volume = 0.4;
-                // Lance le son directement
-                const playPromise = audio.play();
-                
-                if (playPromise !== undefined) {
-                    playPromise.then(_ => {
-                        // La lecture a réussi
-                    })
-                    .catch(error => {
-                        console.log("Lecture bloquée par le navigateur:", error);
-                    });
-                }
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log("Son bloqué:", e));
                 
                 document.getElementById('audio-text').innerText = "Sérénité Active";
                 if(waves) waves.style.display = "block";
+                playing = true;
             } else {
                 audio.pause();
                 document.getElementById('audio-text').innerText = "Sons du Léman";
                 if(waves) waves.style.display = "none";
+                playing = false;
             }
-            playing = !playing;
         }
 
         function toggleFullScreen() {
@@ -804,11 +796,10 @@
             if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
                 if(requestFullScreen) {
                     requestFullScreen.call(docEl).catch(err => {
-                        console.log(`Erreur lors de l'activation du mode plein écran: ${err.message}`);
+                        console.log(`Plein écran non supporté: ${err.message}`);
                     });
                 }
-            }
-            else {
+            } else {
                 if(cancelFullScreen) {
                     cancelFullScreen.call(doc);
                 }
@@ -816,19 +807,29 @@
         }
 
         function startExperience() {
-            // 1. Lancer le plein écran (autorisé car déclenché par le clic de l'utilisateur)
-            const docEl = window.document.documentElement;
-            const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-            if(requestFullScreen) {
-                requestFullScreen.call(docEl).catch(err => console.log("Plein écran non supporté", err));
-            }
-
-            // 2. Lancer la musique d'ambiance
+            // 1. FORCER LE SON EN PREMIER (Indispensable pour iPhone/Safari)
             if(!playing) {
-                toggleAudio();
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log("Son bloqué:", e));
+                playing = true;
+                
+                document.getElementById('audio-text').innerText = "Sérénité Active";
+                const waves = document.querySelector('.audio-waves');
+                if(waves) waves.style.display = "block";
             }
 
-            // 3. Faire disparaître l'écran d'accueil en douceur
+            // 2. DEMANDER LE PLEIN ÉCRAN ENSUITE
+            try {
+                const docEl = window.document.documentElement;
+                const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+                if(requestFullScreen) {
+                    requestFullScreen.call(docEl).catch(err => console.log("Plein écran ignoré par le navigateur"));
+                }
+            } catch (e) {
+                console.log(e);
+            }
+
+            // 3. CACHER L'ÉCRAN D'ACCUEIL
             const overlay = document.getElementById('welcome-overlay');
             overlay.style.opacity = '0';
             setTimeout(() => {
