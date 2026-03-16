@@ -758,10 +758,12 @@
         </nav>
     </div>
 
-    <!-- Son d'ambiance 100% fiable, format MP3, sans restriction de domaine -->
+    <!-- Son nature (Ruisseau) ultra-fiable sans restrictions de domaine -->
     <audio id="spa-audio" loop preload="auto">
-        <source src="https://cdn.freesound.org/previews/183/183881_3106364-lq.mp3" type="audio/mpeg">
-        <source src="https://actions.google.com/sounds/v1/water/babbling_brook.ogg" type="audio/ogg">
+        <!-- Source 1 : Mixkit (Très fiable) -->
+        <source src="https://assets.mixkit.co/active_storage/sfx/2515/2515-preview.mp3" type="audio/mpeg">
+        <!-- Source 2 : Wikimedia Commons (Fallback) -->
+        <source src="https://upload.wikimedia.org/wikipedia/commons/6/61/Water_stream.ogg" type="audio/ogg">
     </audio>
 
     <script>
@@ -773,11 +775,18 @@
             
             if(!playing) {
                 audio.volume = 0.5;
-                audio.play().catch(e => console.log("Son bloqué:", e));
+                const playPromise = audio.play();
                 
-                document.getElementById('audio-text').innerText = "Sérénité Active";
-                if(waves) waves.style.display = "block";
-                playing = true;
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        document.getElementById('audio-text').innerText = "Sérénité Active";
+                        if(waves) waves.style.display = "block";
+                        playing = true;
+                    }).catch(e => {
+                        console.log("Son bloqué:", e);
+                        document.getElementById('audio-text').innerText = "Son bloqué";
+                    });
+                }
             } else {
                 audio.pause();
                 document.getElementById('audio-text').innerText = "Sons du Léman";
@@ -810,12 +819,18 @@
             // 1. FORCER LE SON EN PREMIER (Indispensable pour iPhone/Safari)
             if(!playing) {
                 audio.volume = 0.5;
-                audio.play().catch(e => console.log("Son bloqué:", e));
-                playing = true;
-                
-                document.getElementById('audio-text').innerText = "Sérénité Active";
-                const waves = document.querySelector('.audio-waves');
-                if(waves) waves.style.display = "block";
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        playing = true;
+                        document.getElementById('audio-text').innerText = "Sérénité Active";
+                        const waves = document.querySelector('.audio-waves');
+                        if(waves) waves.style.display = "block";
+                    }).catch(e => {
+                        console.log("Son bloqué:", e);
+                        document.getElementById('audio-text').innerText = "Son bloqué";
+                    });
+                }
             }
 
             // 2. DEMANDER LE PLEIN ÉCRAN ENSUITE
