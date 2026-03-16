@@ -39,6 +39,7 @@
             min-height: 100dvh; 
             margin: 0;
             padding: 0;
+            transition: padding 0.3s ease;
         }
 
         h1, h2, h3 { 
@@ -59,6 +60,7 @@
             flex-direction: column;
             border-radius: 0; /* Pas de bords arrondis sur petit écran pour un rendu natif */
             border: none;
+            transition: all 0.3s ease;
         }
 
         /* Simule un téléphone seulement si l'écran est assez grand (ordinateurs/tablettes) */
@@ -76,6 +78,13 @@
             }
         }
 
+        /* --- COMPORTEMENT PLEIN ÉCRAN --- */
+        :fullscreen body { padding: 0; background-color: var(--blanc); }
+        :fullscreen .app-shell { max-width: 100%; height: 100vh; max-height: none; border: none; border-radius: 0; }
+        
+        :-webkit-full-screen body { padding: 0; background-color: var(--blanc); }
+        :-webkit-full-screen .app-shell { max-width: 100%; height: 100vh; max-height: none; border: none; border-radius: 0; }
+
         /* --- HEADER --- */
         header {
             padding: 25px 20px 15px;
@@ -85,6 +94,12 @@
             background: var(--blanc);
             z-index: 100;
             flex-shrink: 0; /* Empêche le header de s'écraser */
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
 
         .logo { 
@@ -109,6 +124,24 @@
             align-items: center;
             gap: 8px;
             transition: 0.3s;
+        }
+
+        .icon-btn {
+            background: var(--sable);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: var(--eucalyptus);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+        
+        .icon-btn:active, .audio-btn:active {
+            transform: scale(0.95);
         }
 
         /* --- CONTENU --- */
@@ -398,20 +431,57 @@
             box-shadow: 0 8px 20px rgba(184, 125, 93, 0.1);
         }
 
+        /* --- ÉCRAN DE LANCEMENT (SPLASH SCREEN) --- */
+        #welcome-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--sable);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        .welcome-logo {
+            font-family: 'Tenor Sans', serif;
+            font-size: 1.8rem;
+            letter-spacing: 5px;
+            color: var(--texte);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="app-shell">
+    <!-- Écran d'accueil obligatoire pour déclencher le plein écran et le son -->
+    <div id="welcome-overlay">
+        <div class="welcome-logo">Léman & Soi</div>
+        <p style="color: var(--eucalyptus); font-size: 0.8rem; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 3px; text-align: center;">L'expérience immersive</p>
+        <button class="btn-primary" style="width: auto; padding: 15px 40px; border-radius: 30px;" onclick="startExperience()">Entrer dans le sanctuaire</button>
+    </div>
+
+    <div class="app-shell" id="app-shell">
         <header>
             <div class="logo">Léman & Soi</div>
-            <button class="audio-btn" onclick="toggleAudio()">
-                <svg id="audio-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;">
-                    <path d="M11 5L6 9H2V15H6L11 19V5Z"></path>
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" class="audio-waves" style="display:none;"></path>
-                </svg>
-                <span id="audio-text">Sons du Léman</span>
-            </button>
+            <div class="header-actions">
+                <!-- Bouton Plein Écran -->
+                <button class="icon-btn" onclick="toggleFullScreen()" title="Mode Plein Écran">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                    </svg>
+                </button>
+                <!-- Bouton Audio -->
+                <button class="audio-btn" onclick="toggleAudio()" title="Ambiance Sonore">
+                    <svg id="audio-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;">
+                        <path d="M11 5L6 9H2V15H6L11 19V5Z"></path>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" class="audio-waves" style="display:none;"></path>
+                    </svg>
+                    <span id="audio-text">Sons du Léman</span>
+                </button>
+            </div>
         </header>
 
         <div class="main-content">
@@ -711,6 +781,48 @@
                 if(waves) waves.style.display = "none";
             }
             playing = !playing;
+        }
+
+        function toggleFullScreen() {
+            const doc = window.document;
+            const docEl = doc.documentElement;
+
+            const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+            if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                if(requestFullScreen) {
+                    requestFullScreen.call(docEl).catch(err => {
+                        console.log(`Erreur lors de l'activation du mode plein écran: ${err.message}`);
+                    });
+                }
+            }
+            else {
+                if(cancelFullScreen) {
+                    cancelFullScreen.call(doc);
+                }
+            }
+        }
+
+        function startExperience() {
+            // 1. Lancer le plein écran (autorisé car déclenché par le clic de l'utilisateur)
+            const docEl = window.document.documentElement;
+            const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            if(requestFullScreen) {
+                requestFullScreen.call(docEl).catch(err => console.log("Plein écran non supporté", err));
+            }
+
+            // 2. Lancer la musique d'ambiance
+            if(!playing) {
+                toggleAudio();
+            }
+
+            // 3. Faire disparaître l'écran d'accueil en douceur
+            const overlay = document.getElementById('welcome-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 800);
         }
 
         function showScreen(id) {
