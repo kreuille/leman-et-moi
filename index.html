@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Léman & Soi | Prototype Premium</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Tenor+Sans&display=swap" rel="stylesheet">
     <style>
@@ -35,7 +35,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            /* Utilisation de 100dvh pour gérer correctement la hauteur sur les navigateurs mobiles */
+            min-height: 100dvh; 
+            margin: 0;
+            padding: 0;
         }
 
         h1, h2, h3 { 
@@ -44,29 +47,44 @@
             letter-spacing: 1px;
         }
 
-        /* --- CONTENEUR MOBILE --- */
+        /* --- CONTENEUR MOBILE (Responsive) --- */
         .app-shell {
             width: 100%;
-            max-width: 414px;
-            height: 850px;
+            max-width: 100%;
+            height: 100dvh; /* S'adapte à la hauteur exacte de l'écran dynamique */
             background: var(--blanc);
             position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            border-radius: 40px;
-            border: 8px solid #333;
+            border-radius: 0; /* Pas de bords arrondis sur petit écran pour un rendu natif */
+            border: none;
+        }
+
+        /* Simule un téléphone seulement si l'écran est assez grand (ordinateurs/tablettes) */
+        @media (min-width: 450px) and (min-height: 700px) {
+            .app-shell {
+                max-width: 414px;
+                height: 90vh; /* La hauteur s'adapte à 90% de l'écran du PC */
+                max-height: 850px;
+                border-radius: 40px;
+                border: 8px solid #333;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            }
+            body {
+                padding: 20px;
+            }
         }
 
         /* --- HEADER --- */
         header {
-            padding: 30px 20px 20px;
+            padding: 25px 20px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: var(--blanc);
             z-index: 100;
+            flex-shrink: 0; /* Empêche le header de s'écraser */
         }
 
         .logo { 
@@ -90,43 +108,45 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: 0.3s;
         }
 
         /* --- CONTENU --- */
         .main-content {
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 100px;
+            padding-bottom: 100px; /* Espace pour la navigation basse */
         }
 
         .screen {
             display: none;
             padding: 20px;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.4s ease;
         }
 
         .screen.active { display: block; }
 
         @keyframes fadeIn { 
-            from { opacity: 0; } 
-            to { opacity: 1; } 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
         }
 
         /* --- COMPOSANTS --- */
         .hero-card {
-            height: 320px;
-            /* Image de massage relaxant très claire pour la page d'accueil */
+            height: 35vh; /* Hauteur responsive selon l'écran */
+            min-height: 220px;
+            max-height: 320px;
             background: url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&q=80') center 30%;
             background-size: cover;
             border-radius: 25px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .btn-primary {
             background: var(--eucalyptus);
             color: var(--texte-bouton);
             border: none;
-            padding: 20px;
+            padding: 18px;
             border-radius: 12px;
             width: 100%;
             font-size: 0.9rem;
@@ -136,7 +156,7 @@
             cursor: pointer;
             margin-top: 15px;
             box-shadow: 0 4px 15px rgba(94, 116, 127, 0.25);
-            transition: 0.3s;
+            transition: 0.2s;
         }
         
         .btn-primary:active {
@@ -147,7 +167,7 @@
             background: transparent;
             color: var(--eucalyptus);
             border: 1px solid var(--eucalyptus);
-            padding: 18px;
+            padding: 16px;
             border-radius: 12px;
             width: 100%;
             margin-top: 12px;
@@ -155,7 +175,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
         }
         
         .btn-outline:active {
@@ -167,16 +187,18 @@
             background: var(--blanc);
             border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border: 1px solid var(--bordure);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         }
 
         .soin-img {
-            height: 180px;
+            height: 25vh; /* Hauteur responsive */
+            min-height: 160px;
+            max-height: 200px;
             background-size: cover;
             background-position: center;
-            background-color: var(--bordure); /* Fond de secours gris clair */
+            background-color: var(--bordure);
         }
 
         .soin-info {
@@ -194,7 +216,7 @@
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
+            gap: 6px;
             margin: 20px 0;
         }
 
@@ -259,7 +281,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-top: 30px;
+            margin-top: 25px;
             font-size: 0.7rem;
             color: #AAA;
             text-transform: uppercase;
@@ -269,8 +291,8 @@
         /* --- FIDELITE --- */
         .loyalty-card {
             background: var(--sable);
-            padding: 30px;
-            border-radius: 25px;
+            padding: 25px;
+            border-radius: 20px;
             margin-bottom: 25px;
         }
 
@@ -278,7 +300,7 @@
             height: 4px;
             background: #DCE2E5;
             border-radius: 2px;
-            margin: 25px 0 12px 0;
+            margin: 20px 0 10px 0;
             overflow: hidden;
         }
 
@@ -293,7 +315,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             padding: 12px;
             background: var(--sable);
             border-radius: 12px;
@@ -317,14 +339,15 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 90px;
-            background: rgba(255, 255, 255, 0.95);
+            height: 85px;
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(15px);
             border-top: 1px solid var(--bordure);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 0 20px 15px 20px;
+            padding: 0 10px 15px 10px;
+            z-index: 100;
         }
 
         .nav-item {
@@ -362,9 +385,9 @@
         /* Diagnostic */
         .option-box {
             background: var(--sable);
-            padding: 22px;
-            border-radius: 18px;
-            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 12px;
             border: 1px solid var(--bordure);
             cursor: pointer;
             transition: 0.3s;
@@ -372,7 +395,7 @@
         .option-box.selected {
             border-color: var(--or);
             background: var(--blanc);
-            box-shadow: 0 10px 25px rgba(184, 125, 93, 0.1);
+            box-shadow: 0 8px 20px rgba(184, 125, 93, 0.1);
         }
 
     </style>
@@ -397,7 +420,7 @@
             <section id="home" class="screen active">
                 <div class="hero-card"></div>
                 <h1 style="font-size: 2.2rem; margin-bottom: 10px; line-height: 1.1;">L'équilibre<br>retrouvé.</h1>
-                <p style="color: #777; font-weight: 300; margin-bottom: 30px;">Votre oasis de sérénité, directement chez vous à Lausanne.</p>
+                <p style="color: #777; font-weight: 300; margin-bottom: 25px;">Votre oasis de sérénité, directement chez vous à Lausanne.</p>
                 <button class="btn-primary" onclick="showScreen('diag')">Mon Diagnostic Zen</button>
                 <button class="btn-outline" onclick="showScreen('soins')">La Collection</button>
             </section>
@@ -408,115 +431,106 @@
                 <p style="font-size: 0.85rem; color: #777; margin-bottom: 25px;">Une harmonie parfaite entre le corps et l'esprit. Choisissez votre soin.</p>
                 
                 <div class="soin-card">
-                    <!-- Image de massage Deep Tissue (pression ferme sur le dos) -->
                     <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=800&q=80'); background-position: center;"></div>
                     <div class="soin-info">
                         <h3 style="font-size: 1.1rem;">L'Ancrage Minéral (Deep Tissue)</h3>
                         <p style="font-size: 0.8rem; color: #777; margin-top: 5px;">Un massage puissant appuyé sur les fascias et les muscles profonds pour dénouer les tensions chroniques.</p>
                         <div class="soin-price">60 MIN — 135 CHF</div>
-                        <button class="btn-primary" style="padding: 12px; font-size: 0.75rem; margin-top: 15px;" onclick="showScreen('rdv')">Réserver ce rituel</button>
+                        <button class="btn-primary" onclick="showScreen('rdv')">Réserver ce rituel</button>
                     </div>
                 </div>
 
                 <div class="soin-card">
-                    <!-- Image de massage Californien (mains glissantes, détente) -->
                     <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=800&q=80');"></div>
                     <div class="soin-info">
                         <h3 style="font-size: 1.1rem;">La Brise d'Ouchy (Californien)</h3>
                         <p style="font-size: 0.8rem; color: #777; margin-top: 5px;">Un soin enveloppant, lent et fluide aux huiles chaudes, pour une déconnexion mentale absolue.</p>
                         <div class="soin-price">75 MIN — 150 CHF</div>
-                        <button class="btn-primary" style="padding: 12px; font-size: 0.75rem; margin-top: 15px;" onclick="showScreen('rdv')">Réserver ce rituel</button>
+                        <button class="btn-primary" onclick="showScreen('rdv')">Réserver ce rituel</button>
                     </div>
                 </div>
 
                 <div class="soin-card">
-                    <!-- Image de massage des jambes (Drainage lymphatique) -->
                     <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1552693673-1bf958298935?auto=format&fit=crop&w=800&q=80'); background-position: center;"></div>
                     <div class="soin-info">
                         <h3 style="font-size: 1.1rem;">Source Lémanique (Drainage)</h3>
                         <p style="font-size: 0.8rem; color: #777; margin-top: 5px;">Un massage drainant, doux et rythmé pour éliminer les toxines, la rétention d'eau et alléger vos jambes.</p>
                         <div class="soin-price">60 MIN — 140 CHF</div>
-                        <button class="btn-primary" style="padding: 12px; font-size: 0.75rem; margin-top: 15px;" onclick="showScreen('rdv')">Réserver ce rituel</button>
+                        <button class="btn-primary" onclick="showScreen('rdv')">Réserver ce rituel</button>
                     </div>
                 </div>
 
                 <div class="soin-card">
-                    <!-- Image de massage aux pierres chaudes -->
                     <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=800&q=80'); background-position: center;"></div>
                     <div class="soin-info">
                         <h3 style="font-size: 1.1rem;">Chaleur Volcanique (Pierres Chaudes)</h3>
                         <p style="font-size: 0.8rem; color: #777; margin-top: 5px;">Une diffusion de chaleur thérapeutique à travers des pierres de basalte lisses pour fondre la raideur musculaire.</p>
                         <div class="soin-price">90 MIN — 175 CHF</div>
-                        <button class="btn-primary" style="padding: 12px; font-size: 0.75rem; margin-top: 15px;" onclick="showScreen('rdv')">Réserver ce rituel</button>
+                        <button class="btn-primary" onclick="showScreen('rdv')">Réserver ce rituel</button>
                     </div>
                 </div>
 
                 <div class="soin-card">
-                    <!-- Image de massage visage / crâne -->
                     <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=800&q=80');"></div>
                     <div class="soin-info">
                         <h3 style="font-size: 1.1rem;">Lumière d'Altitude (Visage & Crâne)</h3>
                         <p style="font-size: 0.8rem; color: #777; margin-top: 5px;">Un soin ciblé sur les méridiens du visage, de la nuque et du cuir chevelu pour relâcher le stress accumulé.</p>
                         <div class="soin-price">45 MIN — 95 CHF</div>
-                        <button class="btn-primary" style="padding: 12px; font-size: 0.75rem; margin-top: 15px;" onclick="showScreen('rdv')">Réserver ce rituel</button>
+                        <button class="btn-primary" onclick="showScreen('rdv')">Réserver ce rituel</button>
                     </div>
                 </div>
 
                 <div class="soin-card">
-                    <!-- Image de massage pieds / reflexologie -->
                     <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1552693673-1bf958298935?auto=format&fit=crop&w=800&q=80');"></div>
                     <div class="soin-info">
                         <h3 style="font-size: 1.1rem;">Marche Pèlerine (Réflexologie)</h3>
                         <p style="font-size: 0.8rem; color: #777; margin-top: 5px;">Des pressions expertes sur les zones réflexes de la voûte plantaire pour rééquilibrer les organes de tout le corps.</p>
                         <div class="soin-price">60 MIN — 120 CHF</div>
-                        <button class="btn-primary" style="padding: 12px; font-size: 0.75rem; margin-top: 15px;" onclick="showScreen('rdv')">Réserver ce rituel</button>
+                        <button class="btn-primary" onclick="showScreen('rdv')">Réserver ce rituel</button>
                     </div>
                 </div>
 
                 <div class="soin-card">
-                    <!-- Image femme enceinte / douceur -->
                     <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1531983412531-1f49a365ffed?auto=format&fit=crop&w=800&q=80');"></div>
                     <div class="soin-info">
                         <h3 style="font-size: 1.1rem;">Le Cocon (Femme Enceinte)</h3>
                         <p style="font-size: 0.8rem; color: #777; margin-top: 5px;">Un soin maternant sur le côté, soulageant le dos et les jambes lourdes, adapté à partir du 4ème mois.</p>
                         <div class="soin-price">60 MIN — 135 CHF</div>
-                        <button class="btn-primary" style="padding: 12px; font-size: 0.75rem; margin-top: 15px;" onclick="showScreen('rdv')">Réserver ce rituel</button>
+                        <button class="btn-primary" onclick="showScreen('rdv')">Réserver ce rituel</button>
                     </div>
                 </div>
-
             </section>
 
             <!-- DIAGNOSTIC -->
             <section id="diag" class="screen">
-                <!-- Photo de nature zen -->
-                <div style="height: 160px; background: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80') center center; background-size: cover; border-radius: 20px; margin-bottom: 25px; border: 1px solid var(--bordure); box-shadow: 0 5px 15px rgba(0,0,0,0.05);"></div>
+                <div style="height: 25vh; min-height: 150px; max-height: 220px; background: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80') center center; background-size: cover; border-radius: 20px; margin-bottom: 20px; border: 1px solid var(--bordure); box-shadow: 0 5px 15px rgba(0,0,0,0.05);"></div>
                 
                 <h2>Analyse de l'Instant</h2>
-                <p style="font-size: 0.85rem; color: #777; margin-bottom: 30px;">Identifions ensemble l'équilibre dont vous avez besoin.</p>
+                <p style="font-size: 0.85rem; color: #777; margin-bottom: 25px;">Identifions ensemble l'équilibre dont vous avez besoin.</p>
                 
                 <div class="option-box" onclick="selectDiag(this, 'L\'Ancrage Minéral', 'Libération profonde des tensions accumulées.')">
                     <strong style="font-family: 'Tenor Sans';">Tensions Musculaires</strong>
-                    <p style="font-size: 0.75rem; color: #777; margin-top: 5px;">Dos sollicité, perte d'ancrage, raideurs.</p>
+                    <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Dos sollicité, perte d'ancrage, raideurs.</p>
                 </div>
                 
                 <div class="option-box" onclick="selectDiag(this, 'La Brise d\'Ouchy', 'Une déconnexion sensorielle pour apaiser l\'esprit.')">
                     <strong style="font-family: 'Tenor Sans';">Surcharge Mentale</strong>
-                    <p style="font-size: 0.75rem; color: #777; margin-top: 5px;">Stress, esprit embrumé, besoin de calme.</p>
+                    <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Stress, esprit embrumé, besoin de calme.</p>
                 </div>
 
                 <div class="option-box" onclick="selectDiag(this, 'Source Lémanique', 'Un drainage doux pour éliminer les toxines et alléger le corps.')">
                     <strong style="font-family: 'Tenor Sans';">Besoin de Vitalité & Légèreté</strong>
-                    <p style="font-size: 0.75rem; color: #777; margin-top: 5px;">Jambes lourdes, fatigue persistante, rétention d'eau.</p>
+                    <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Jambes lourdes, fatigue persistante, rétention d'eau.</p>
                 </div>
 
                 <div class="option-box" onclick="selectDiag(this, 'Marche Pèlerine', 'Une réflexologie pour relancer votre énergie vitale.')">
                     <strong style="font-family: 'Tenor Sans';">Rééquilibrage Énergétique</strong>
-                    <p style="font-size: 0.75rem; color: #777; margin-top: 5px;">Baisse d'énergie, déséquilibre global, besoin de s'ancrer.</p>
+                    <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Baisse d'énergie, déséquilibre global, besoin de s'ancrer.</p>
                 </div>
 
                 <div class="option-box" onclick="selectDiag(this, 'Le Cocon', 'Un soin maternant et sécurisant pour vous et bébé.')">
                     <strong style="font-family: 'Tenor Sans';">Douceur Maternelle (Grossesse)</strong>
-                    <p style="font-size: 0.75rem; color: #777; margin-top: 5px;">Tensions liées à la grossesse, besoin de réconfort.</p>
+                    <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Tensions liées à la grossesse, besoin de réconfort.</p>
                 </div>
 
                 <button class="btn-primary" onclick="showScreen('result')">Voir la Recommandation</button>
@@ -549,7 +563,7 @@
                     <div class="calendar-day">18</div>
                 </div>
 
-                <h3 style="font-size: 0.9rem; margin-top: 25px;">Heures disponibles</h3>
+                <h3 style="font-size: 0.9rem; margin-top: 20px;">Heures disponibles</h3>
                 <div class="time-slots">
                     <div class="slot">09:00</div>
                     <div class="slot selected">11:30</div>
@@ -557,7 +571,7 @@
                     <div class="slot">16:30</div>
                 </div>
 
-                <h3 style="font-size: 0.9rem; margin-top: 30px;">Lieu d'intervention</h3>
+                <h3 style="font-size: 0.9rem; margin-top: 25px;">Lieu d'intervention</h3>
                 <input type="text" placeholder="Adresse à Lausanne ou Riviera" style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--bordure); background: var(--sable); color: var(--texte); margin-top: 10px; outline: none; font-size: 0.85rem;">
                 
                 <button class="btn-primary" onclick="showScreen('paiement')">Continuer vers le paiement</button>
@@ -568,7 +582,7 @@
                 <h2>Paiement Sécurisé</h2>
                 <p style="font-size: 0.85rem; color: #777; margin-bottom: 20px;">Finalisez votre réservation exclusive.</p>
 
-                <div style="background: var(--sable); padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 1px solid var(--bordure);">
+                <div style="background: var(--sable); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--bordure);">
                     <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 8px;">
                         <span>Rituel d'exception (90 min)</span>
                         <span>165.00 CHF</span>
@@ -593,6 +607,7 @@
                 </div>
 
                 <button class="btn-primary" onclick="showScreen('confirmation')">Confirmer & Payer</button>
+                <button class="btn-outline" onclick="showScreen('rdv')" style="padding:15px; font-size: 0.8rem;">Retour</button>
                 
                 <div class="security-badge">
                     <svg viewBox="0 0 24 24" style="width:14px; stroke:currentColor; stroke-width:2; fill:none;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -602,26 +617,26 @@
 
             <!-- CONFIRMATION FINALE -->
             <section id="confirmation" class="screen">
-                <div style="text-align: center; margin-top: 60px;">
-                    <div style="width: 80px; height: 80px; background: var(--sable); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; border: 1px solid var(--bordure);">
-                        <svg viewBox="0 0 24 24" style="width:40px; stroke:var(--vert-succes); stroke-width:2; fill:none;"><polyline points="20 6 9 17 4 12"/></svg>
+                <div style="text-align: center; margin-top: 40px;">
+                    <div style="width: 70px; height: 70px; background: var(--sable); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; border: 1px solid var(--bordure);">
+                        <svg viewBox="0 0 24 24" style="width:35px; stroke:var(--vert-succes); stroke-width:2; fill:none;"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
                     <h2 style="color: var(--eucalyptus);">À très bientôt.</h2>
-                    <p style="font-size: 0.9rem; color: #777; margin-top: 15px; padding: 0 20px;">Votre rendez-vous est confirmé. Un récapitulatif vient de vous être envoyé par email.</p>
+                    <p style="font-size: 0.9rem; color: #777; margin-top: 15px; padding: 0 10px;">Votre rendez-vous est confirmé. Un récapitulatif vient de vous être envoyé par email.</p>
                     
-                    <div style="margin-top: 40px; border-top: 1px solid var(--bordure); padding-top: 30px; text-align: left;">
+                    <div style="margin-top: 35px; border-top: 1px solid var(--bordure); padding-top: 25px; text-align: left;">
                         <h3 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--or);">Rappel</h3>
                         <p style="font-size: 0.75rem; color: #777; margin-top: 10px;">Veuillez prévoir un espace calme. Nous arrivons avec tout le matériel nécessaire pour recréer votre oasis.</p>
                     </div>
 
-                    <button class="btn-primary" style="margin-top: 50px;" onclick="showScreen('home')">Retour à l'accueil</button>
+                    <button class="btn-primary" style="margin-top: 40px;" onclick="showScreen('home')">Retour à l'accueil</button>
                 </div>
             </section>
 
             <!-- PROFIL -->
             <section id="profil" class="screen">
                 <h2>Votre Sanctuaire</h2>
-                <p style="font-size: 0.85rem; color: #777; margin-bottom: 30px;">Bienvenue, Claire.</p>
+                <p style="font-size: 0.85rem; color: #777; margin-bottom: 25px;">Bienvenue, Claire.</p>
                 
                 <div class="loyalty-card">
                     <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -634,8 +649,8 @@
                     <p style="font-size: 0.7rem; color: #777; text-align: right;">3 soins avant votre rituel offert.</p>
                 </div>
 
-                <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin: 40px 0 20px 0; color: var(--or);">Préférences</h3>
-                <div style="margin-top: 15px;">
+                <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin: 35px 0 15px 0; color: var(--or);">Préférences</h3>
+                <div>
                     <div class="pref-row">
                         <svg class="pref-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         <span class="pref-text"><strong>Pression :</strong> Ancrage profond</span>
@@ -673,9 +688,9 @@
         </nav>
     </div>
 
-    <audio id="spa-audio" loop>
-        <!-- Son zen doux -->
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+    <!-- Son zen premium et fiable hébergé par Pixabay (libre de droits) -->
+    <audio id="spa-audio" loop crossorigin="anonymous" preload="auto">
+        <source src="https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -685,8 +700,9 @@
         function toggleAudio() {
             const waves = document.querySelector('.audio-waves');
             if(!playing) {
-                audio.play();
-                audio.volume = 0.15;
+                // Le catch permet d'éviter l'erreur JS si le navigateur bloque l'autoplay initial
+                audio.play().catch(error => console.log("La lecture audio a été retardée par le navigateur.", error));
+                audio.volume = 0.4; // Volume augmenté pour être bien audible
                 document.getElementById('audio-text').innerText = "Sérénité Active";
                 if(waves) waves.style.display = "block";
             } else {
@@ -720,7 +736,7 @@
                 else if (id === 'profil') navItems[3].classList.add('active');
             }
             
-            // Si on retourne à l'accueil on remet la barre de défilement en haut
+            // Remet le défilement en haut à chaque changement d'écran
             document.querySelector('.main-content').scrollTop = 0;
         }
 
