@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Léman & Soi | Thérapie Manuelle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Tenor+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette "Équilibre Minéral & Eau" (Charte graphique Zen) */
+            --sable: #F2F5F5; 
+            --eucalyptus: #5E747F; 
+            --or: #B87D5D; 
+            --texte: #2C3E45; 
+            --blanc: #FFFFFF;
+            --gris-icon: #9AA7AD;
+            --gris-clair: #E8ECEE; 
+            --vert-succes: #5E747F;
+            --texte-bouton: #FFFFFF;
+            --bordure: #DCE2E5;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #E5E5E5; 
+            color: var(--texte);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100dvh; 
+            margin: 0;
+            padding: 0;
+            transition: padding 0.3s ease;
+        }
+
+        h1, h2, h3 { 
+            font-family: 'Tenor Sans', serif; 
+            font-weight: 400; 
+            letter-spacing: 1px;
+            color: var(--texte);
+        }
+
+        /* --- CONTENEUR MOBILE (Responsive) --- */
+        .app-shell {
+            width: 100%;
+            max-width: 100%;
+            height: 100dvh; 
+            background: var(--blanc);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0; 
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 450px) and (min-height: 700px) {
+            .app-shell {
+                max-width: 414px;
+                height: 90vh; 
+                max-height: 850px;
+                border-radius: 40px;
+                border: 8px solid #333;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            }
+            body { padding: 20px; }
+        }
+
+        /* --- COMPORTEMENT PLEIN ÉCRAN --- */
+        :fullscreen body { padding: 0; background-color: var(--blanc); }
+        :fullscreen .app-shell { max-width: 100%; height: 100vh; max-height: none; border: none; border-radius: 0; }
+        :-webkit-full-screen body { padding: 0; background-color: var(--blanc); }
+        :-webkit-full-screen .app-shell { max-width: 100%; height: 100vh; max-height: none; border: none; border-radius: 0; }
+
+        /* --- HEADER --- */
+        header {
+            padding: 25px 20px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--blanc);
+            z-index: 100;
+            flex-shrink: 0; 
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .logo { 
+            font-family: 'Tenor Sans', serif; 
+            font-size: 1rem; 
+            letter-spacing: 4px; 
+            color: var(--texte);
+            text-transform: uppercase;
+        }
+
+        .audio-btn {
+            background: var(--sable);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--eucalyptus);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .icon-btn {
+            background: var(--sable);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: var(--eucalyptus);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+        
+        .icon-btn:active, .audio-btn:active { transform: scale(0.95); }
+
+        /* --- CONTENU --- */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px; 
+        }
+
+        .screen {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .screen.active { display: block; }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* --- COMPOSANTS --- */
+        .hero-card {
+            height: 35vh; 
+            min-height: 220px;
+            max-height: 320px;
+            /* Image thérapeutique */
+            background: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80') center 40%;
+            background-size: cover;
+            border-radius: 25px;
+            margin-bottom: 25px;
+        }
+
+        .btn-primary {
+            background: var(--eucalyptus);
+            color: var(--texte-bouton);
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 0.9rem;
+            font-family: 'Tenor Sans', serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(94, 116, 127, 0.25);
+            transition: 0.2s;
+        }
+        
+        .btn-primary:active { transform: scale(0.98); }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--eucalyptus);
+            border: 1px solid var(--eucalyptus);
+            padding: 16px;
+            border-radius: 12px;
+            width: 100%;
+            margin-top: 12px;
+            font-family: 'Tenor Sans', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .btn-outline:active { background: var(--sable); }
+
+        /* --- CARTE SOIN (Traitements) --- */
+        .soin-card {
+            background: var(--blanc);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid var(--bordure);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        .soin-img {
+            height: 25vh; 
+            min-height: 160px;
+            max-height: 200px;
+            background-size: cover;
+            background-position: center;
+            background-color: var(--bordure);
+        }
+
+        .soin-info { padding: 20px; }
+        .soin-info p { font-size: 0.8rem; color: #777; margin-top: 5px; line-height: 1.5; }
+
+        .tag-medical {
+            display: inline-block;
+            background: var(--sable);
+            color: var(--eucalyptus);
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--bordure);
+        }
+
+        .soin-price {
+            color: var(--or);
+            font-weight: 500;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- CALENDRIER & RDV --- */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin: 20px 0;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .calendar-day.selected {
+            background: var(--eucalyptus);
+            color: var(--texte-bouton);
+        }
+
+        .time-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .slot {
+            padding: 10px 15px;
+            border: 1px solid var(--bordure);
+            border-radius: 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .slot.selected {
+            border-color: var(--or);
+            background: var(--sable);
+            color: var(--or);
+            font-weight: 500;
+        }
+
+        /* --- BILAN (Diagnostic) --- */
+        .option-box {
+            background: var(--sable);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            border: 1px solid var(--bordure);
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        .option-box.selected {
+            border-color: var(--or);
+            background: var(--blanc);
+            box-shadow: 0 8px 20px rgba(184, 125, 93, 0.1);
+        }
+        .option-icon {
+            width: 24px;
+            height: 24px;
+            stroke: var(--or);
+            fill: none;
+            stroke-width: 1.5;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* --- PAIEMENT --- */
+        .payment-method {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px;
+            border: 1px solid var(--bordure);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .payment-method.active {
+            border-color: var(--or);
+            background: var(--sable);
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 25px;
+            font-size: 0.7rem;
+            color: #AAA;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- DOSSIER --- */
+        .loyalty-card {
+            background: var(--sable);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--eucalyptus);
+        }
+
+        /* --- NAV BASSE --- */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 85px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid var(--bordure);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px 15px 10px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.6rem;
+            color: var(--gris-icon);
+            cursor: pointer;
+            gap: 6px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 60px;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--gris-icon);
+            fill: none;
+            stroke-width: 1.5;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active { color: var(--eucalyptus); }
+        .nav-item.active svg { stroke: var(--eucalyptus); transform: translateY(-2px); }
+
+        /* --- SPLASH SCREEN --- */
+        #welcome-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--sable);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        .welcome-logo {
+            font-family: 'Tenor Sans', serif;
+            font-size: 1.8rem;
+            letter-spacing: 5px;
+            color: var(--texte);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .welcome-subtitle {
+            color: var(--eucalyptus);
+            font-size: 0.8rem;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ÉCRAN D'ACCUEIL -->
+    <div id="welcome-overlay">
+        <div class="welcome-logo">Léman & Soi</div>
+        <p class="welcome-subtitle">Cabinet de Thérapie Manuelle</p>
+        <button class="btn-primary" style="width: auto; padding: 15px 40px; border-radius: 30px;" onclick="startExperience()">Accéder au cabinet</button>
+    </div>
+
+    <div class="app-shell" id="app-shell">
+        <header>
+            <div class="logo">Léman & Soi</div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="toggleFullScreen()" title="Mode Plein Écran">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                    </svg>
+                </button>
+                <button class="audio-btn" onclick="toggleAudio()" title="Ambiance Clinique">
+                    <svg id="audio-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;">
+                        <path d="M11 5L6 9H2V15H6L11 19V5Z"></path>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" class="audio-waves" style="display:none;"></path>
+                    </svg>
+                    <span id="audio-text">Fréquences</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            
+            <!-- ACCUEIL -->
+            <section id="home" class="screen active">
+                <div class="hero-card"></div>
+                <h1 style="font-size: 2.2rem; margin-bottom: 10px; line-height: 1.1;">Votre corps,<br>notre expertise.</h1>
+                <p style="color: #777; font-weight: 300; margin-bottom: 25px;">Une approche thérapeutique sur-mesure pour traiter vos douleurs et optimiser votre mobilité.</p>
+                <button class="btn-primary" onclick="showScreen('diag')">Démarrer mon Bilan</button>
+                <button class="btn-outline" onclick="showScreen('soins')">Nos Protocoles</button>
+            </section>
+
+            <!-- PROTOCOLES -->
+            <section id="soins" class="screen">
+                <h2>Thérapies Manuelles</h2>
+                <p style="font-size: 0.85rem; color: #777; margin-bottom: 25px;">Traitements cliniques ciblés selon vos pathologies et besoins de récupération.</p>
+                
+                <div class="soin-card">
+                    <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80'); background-position: center 20%;"></div>
+                    <div class="soin-info">
+                        <div class="tag-medical">Pathologies Musculaires</div>
+                        <h3 style="font-size: 1.1rem;">Thérapie Deep Tissue & Fascias</h3>
+                        <p>Travail biomécanique profond sur les tissus conjonctifs pour relâcher les adhérences, traiter les douleurs chroniques et restaurer l'amplitude articulaire.</p>
+                        <div class="soin-price">
+                            <span style="color: #777; font-size: 0.75rem;">60 MIN</span>
+                            <span>135 CHF</span>
+                        </div>
+                        <button class="btn-outline" style="font-size: 0.75rem; padding: 12px; margin-top: 15px;" onclick="showScreen('rdv')">Programmer une séance</button>
+                    </div>
+                </div>
+
+                <div class="soin-card">
+                    <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1588286840104-8957b019727f?auto=format&fit=crop&w=800&q=80'); background-position: center 60%;"></div>
+                    <div class="soin-info">
+                        <div class="tag-medical">Circulatoire & Post-Op</div>
+                        <h3 style="font-size: 1.1rem;">Drainage Lymphatique Clinique</h3>
+                        <p>Stimulation manuelle du système lymphatique. Indiqué pour les œdèmes, l'insuffisance veineuse, ou en récupération post-opératoire (chirurgie orthopédique/plastique).</p>
+                        <div class="soin-price">
+                            <span style="color: #777; font-size: 0.75rem;">60 MIN</span>
+                            <span>140 CHF</span>
+                        </div>
+                        <button class="btn-outline" style="font-size: 0.75rem; padding: 12px; margin-top: 15px;" onclick="showScreen('rdv')">Programmer une séance</button>
+                    </div>
+                </div>
+
+                <div class="soin-card">
+                    <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=800&q=80'); background-position: center;"></div>
+                    <div class="soin-info">
+                        <div class="tag-medical">Athlètes & Actifs</div>
+                        <h3 style="font-size: 1.1rem;">Massage Sportif & Récupération</h3>
+                        <p>Protocole tonique d'oxygénation musculaire. Prévention des blessures, élimination de l'acide lactique et traitement des contractures post-effort.</p>
+                        <div class="soin-price">
+                            <span style="color: #777; font-size: 0.75rem;">75 MIN</span>
+                            <span>150 CHF</span>
+                        </div>
+                        <button class="btn-outline" style="font-size: 0.75rem; padding: 12px; margin-top: 15px;" onclick="showScreen('rdv')">Programmer une séance</button>
+                    </div>
+                </div>
+
+                <div class="soin-card">
+                    <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=800&q=80');"></div>
+                    <div class="soin-info">
+                        <div class="tag-medical">Neurologie & Stress</div>
+                        <h3 style="font-size: 1.1rem;">Relâchement Crânien & Cervical</h3>
+                        <p>Décompression myofasciale ciblée sur l'axe occiput-cervicales. Traitement des migraines tensionnelles, bruxisme et séquelles de coup de lapin (whiplash).</p>
+                        <div class="soin-price">
+                            <span style="color: #777; font-size: 0.75rem;">45 MIN</span>
+                            <span>95 CHF</span>
+                        </div>
+                        <button class="btn-outline" style="font-size: 0.75rem; padding: 12px; margin-top: 15px;" onclick="showScreen('rdv')">Programmer une séance</button>
+                    </div>
+                </div>
+
+                <div class="soin-card">
+                    <div class="soin-img" style="background-image: url('https://images.unsplash.com/photo-1531983412531-1f49a365ffed?auto=format&fit=crop&w=800&q=80'); background-position: center 30%;"></div>
+                    <div class="soin-info">
+                        <div class="tag-medical">Maternité</div>
+                        <h3 style="font-size: 1.1rem;">Thérapie Manuelle Périnétale</h3>
+                        <p>Prise en charge des modifications posturales de la grossesse. Soulagement des sciatalgies, lombalgies et troubles circulatoires des membres inférieurs.</p>
+                        <div class="soin-price">
+                            <span style="color: #777; font-size: 0.75rem;">60 MIN</span>
+                            <span>135 CHF</span>
+                        </div>
+                        <button class="btn-outline" style="font-size: 0.75rem; padding: 12px; margin-top: 15px;" onclick="showScreen('rdv')">Programmer une séance</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DIAGNOSTIC (Bilan Clinique) -->
+            <section id="diag" class="screen">
+                <div style="height: 25vh; min-height: 150px; max-height: 220px; background: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80') center center; background-size: cover; border-radius: 20px; margin-bottom: 20px; border: 1px solid var(--bordure); box-shadow: 0 5px 15px rgba(0,0,0,0.05);"></div>
+                
+                <h2>Bilan Préliminaire</h2>
+                <p style="font-size: 0.85rem; color: #777; margin-bottom: 25px;">Afin d'orienter notre prise en charge, veuillez indiquer votre motif de consultation principal.</p>
+                
+                <div class="option-box" onclick="selectDiag(this, 'Deep Tissue & Fascias', 'Traitement ciblé sur les zones de tension pour restaurer la mobilité.')">
+                    <svg class="option-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <div>
+                        <strong style="font-family: 'Tenor Sans'; color: var(--texte); font-size: 1rem;">Douleurs & Tensions Chroniques</strong>
+                        <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Lombalgie, cervicalgie, raideurs articulaires, perte de mobilité.</p>
+                    </div>
+                </div>
+                
+                <div class="option-box" onclick="selectDiag(this, 'Massage Sportif', 'Protocole de récupération active et traitement des contractures.')">
+                    <svg class="option-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    <div>
+                        <strong style="font-family: 'Tenor Sans'; color: var(--texte); font-size: 1rem;">Récupération & Sport</strong>
+                        <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Post-effort, préparation physique, contractures musculaires.</p>
+                    </div>
+                </div>
+
+                <div class="option-box" onclick="selectDiag(this, 'Drainage Lymphatique', 'Protocole médical de stimulation du système lymphatique.')">
+                    <svg class="option-icon" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+                    <div>
+                        <strong style="font-family: 'Tenor Sans'; color: var(--texte); font-size: 1rem;">Troubles Circulatoires / Post-Op</strong>
+                        <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Œdèmes, rétention d'eau, jambes lourdes, suites chirurgicales.</p>
+                    </div>
+                </div>
+
+                <div class="option-box" onclick="selectDiag(this, 'Relâchement Crânien', 'Décompression des fascias supérieurs et de la sphère ORL.')">
+                    <svg class="option-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+                    <div>
+                        <strong style="font-family: 'Tenor Sans'; color: var(--texte); font-size: 1rem;">Stress Chronique & Somatisation</strong>
+                        <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Migraines tensionnelles, bruxisme, fatigue mentale sévère.</p>
+                    </div>
+                </div>
+
+                <div class="option-box" onclick="selectDiag(this, 'Thérapie Périnétale', 'Suivi adapté à la biomécanique de la grossesse.')">
+                    <svg class="option-icon" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                    <div>
+                        <strong style="font-family: 'Tenor Sans'; color: var(--texte); font-size: 1rem;">Accompagnement Grossesse</strong>
+                        <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Soulagement biomécanique, sciatique de grossesse, inconforts.</p>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="showScreen('result')">Générer le Protocole</button>
+            </section>
+
+            <!-- RESULTAT -->
+            <section id="result" class="screen">
+                <div class="tag-medical" style="margin-bottom: 15px;">Protocole Recommandé</div>
+                <h2 style="color: var(--or);" id="res-title">Sélectionnez un motif</h2>
+                <div style="background: var(--sable); padding: 30px; border-radius: 25px; margin: 30px 0; border: 1px solid var(--bordure);">
+                    <h3 style="font-size: 1.1rem; color: var(--texte); margin-bottom: 10px;">Objectif de la séance</h3>
+                    <p id="res-desc" style="font-size: 0.9rem; color: #777; line-height: 1.6;">Le plan de traitement sera défini avec votre thérapeute lors de l'anamnèse en début de séance.</p>
+                    
+                    <div style="margin-top: 25px; font-weight: 400; color: var(--eucalyptus); letter-spacing: 1px;">DURÉE : 60 à 90 MIN</div>
+                </div>
+                <button class="btn-primary" onclick="showScreen('rdv')">Programmer la consultation</button>
+                <button class="btn-outline" onclick="showScreen('home')">Retour au tableau de bord</button>
+            </section>
+
+            <!-- RENDEZ-VOUS (Consultation) -->
+            <section id="rdv" class="screen">
+                <h2>Disponibilités</h2>
+                <p style="font-size: 0.85rem; color: #777; margin-bottom: 20px;">Sélectionnez un créneau pour votre consultation à domicile.</p>
+                
+                <div class="calendar-grid">
+                    <div class="calendar-day" onclick="selectDay(this)">12</div>
+                    <div class="calendar-day" onclick="selectDay(this)">13</div>
+                    <div class="calendar-day" onclick="selectDay(this)">14</div>
+                    <div class="calendar-day selected" onclick="selectDay(this)">15</div>
+                    <div class="calendar-day" onclick="selectDay(this)">16</div>
+                    <div class="calendar-day" onclick="selectDay(this)">17</div>
+                    <div class="calendar-day" onclick="selectDay(this)">18</div>
+                </div>
+
+                <h3 style="font-size: 0.9rem; margin-top: 20px;">Créneaux d'intervention</h3>
+                <div class="time-slots">
+                    <div class="slot" onclick="selectTime(this)">09:00</div>
+                    <div class="slot selected" onclick="selectTime(this)">11:30</div>
+                    <div class="slot" onclick="selectTime(this)">14:00</div>
+                    <div class="slot" onclick="selectTime(this)">16:30</div>
+                </div>
+
+                <h3 style="font-size: 0.9rem; margin-top: 25px;">Lieu d'intervention (Cabinet mobile)</h3>
+                <input type="text" placeholder="Saisissez votre adresse..." style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--bordure); background: var(--sable); color: var(--texte); margin-top: 10px; outline: none; font-size: 0.85rem;">
+                
+                <button class="btn-primary" onclick="showScreen('paiement')">Valider le rendez-vous</button>
+            </section>
+
+            <!-- PAIEMENT -->
+            <section id="paiement" class="screen">
+                <h2>Honoraires</h2>
+                <p style="font-size: 0.85rem; color: #777; margin-bottom: 20px;">Détails de facturation de votre traitement.</p>
+
+                <div style="background: var(--sable); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--bordure);">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 8px;">
+                        <span>Consultation thérapeutique (60 min)</span>
+                        <span>135.00 CHF</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 8px;">
+                        <span>Déplacement professionnel</span>
+                        <span>Inclus</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: 500; border-top: 1px solid var(--bordure); padding-top: 10px; margin-top: 10px;">
+                        <span>Total TTC</span>
+                        <span style="color: var(--or);">135.00 CHF</span>
+                    </div>
+                </div>
+
+                <div class="payment-method active" onclick="selectPayment(this)">
+                    <span style="font-size: 0.9rem;"> Pay</span>
+                    <svg viewBox="0 0 24 24" style="width:18px; fill:currentColor;"><circle cx="12" cy="12" r="10" stroke="currentColor" fill="none" stroke-width="1.5"/><circle cx="12" cy="12" r="5" fill="currentColor"/></svg>
+                </div>
+                <div class="payment-method" onclick="selectPayment(this)">
+                    <span style="font-size: 0.9rem;">Carte de Crédit</span>
+                    <svg viewBox="0 0 24 24" style="width:18px; stroke:currentColor; stroke-width:1.5; fill:none;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                </div>
+
+                <button class="btn-primary" onclick="showScreen('confirmation')">Confirmer la consultation</button>
+                <button class="btn-outline" onclick="showScreen('rdv')" style="padding:15px; font-size: 0.8rem;">Modifier les dates</button>
+                
+                <div class="security-badge">
+                    <svg viewBox="0 0 24 24" style="width:14px; stroke:currentColor; stroke-width:2; fill:none;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Plateforme médicale sécurisée
+                </div>
+            </section>
+
+            <!-- CONFIRMATION -->
+            <section id="confirmation" class="screen">
+                <div style="text-align: center; margin-top: 40px;">
+                    <div style="width: 70px; height: 70px; background: var(--sable); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; border: 1px solid var(--bordure);">
+                        <svg viewBox="0 0 24 24" style="width:35px; stroke:var(--vert-succes); stroke-width:2; fill:none;"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <h2 style="color: var(--eucalyptus);">Dossier enregistré.</h2>
+                    <p style="font-size: 0.9rem; color: #777; margin-top: 15px; padding: 0 10px;">Votre consultation a bien été planifiée. Une confirmation vous a été envoyée par email.</p>
+                    
+                    <div style="margin-top: 35px; border-top: 1px solid var(--bordure); padding-top: 25px; text-align: left;">
+                        <h3 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--or);">Avant la séance</h3>
+                        <p style="font-size: 0.75rem; color: #777; margin-top: 10px;">Veuillez prévoir un espace dégagé pour l'installation de la table clinique. Un questionnaire médical rapide (anamnèse) sera effectué avant le début du traitement.</p>
+                    </div>
+
+                    <button class="btn-primary" style="margin-top: 40px;" onclick="showScreen('home')">Retour à l'accueil</button>
+                </div>
+            </section>
+
+            <!-- DOSSIER (Profil) -->
+            <section id="profil" class="screen">
+                <h2>Dossier Patient</h2>
+                <p style="font-size: 0.85rem; color: #777; margin-bottom: 25px;">Espace personnel de suivi clinique.</p>
+                
+                <div class="loyalty-card">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <span style="font-size: 0.65rem; letter-spacing: 2px; color: var(--eucalyptus);">PATIENT</span>
+                        <span style="font-family: 'Tenor Sans'; color: var(--or); font-size: 1.2rem;">Claire D.</span>
+                    </div>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--bordure);">
+                        <span style="font-size: 0.75rem; color: var(--texte);">Dernière consultation : Il y a 3 semaines</span>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin: 35px 0 15px 0; color: var(--or);">Informations Médicales</h3>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 12px; padding: 15px; background: var(--blanc); border-radius: 12px; border: 1px solid var(--bordure);">
+                        <svg class="option-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: var(--eucalyptus);"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                        <span style="font-size: 0.85rem; color: var(--texte);"><strong>Antécédents :</strong> Entorse cervicale (2021)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 12px; padding: 15px; background: var(--blanc); border-radius: 12px; border: 1px solid var(--bordure);">
+                        <svg class="option-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: var(--eucalyptus);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <span style="font-size: 0.85rem; color: var(--texte);"><strong>Contre-indications :</strong> Aucune signalée</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 12px; padding: 15px; background: var(--blanc); border-radius: 12px; border: 1px solid var(--bordure);">
+                        <svg class="option-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: var(--eucalyptus);"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <span style="font-size: 0.85rem; color: var(--texte);"><strong>Sensibilité :</strong> Modérée à forte</span>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="navTo('home', this)">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Accueil</span>
+            </div>
+            <div class="nav-item" onclick="navTo('diag', this)">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <span>Bilan</span>
+            </div>
+            <div class="nav-item" onclick="navTo('rdv', this)">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span>RDV</span>
+            </div>
+            <div class="nav-item" onclick="navTo('profil', this)">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Dossier</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Son d'ambiance thérapeutique (Fichier utilisateur) -->
+    <audio id="spa-audio" loop preload="auto">
+        <source src="Whispers_of_the_Verdant_Grove.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const audio = document.getElementById('spa-audio');
+
+        function toggleAudio() {
+            const waves = document.querySelector('.audio-waves');
+            const textEl = document.getElementById('audio-text');
+            
+            if(audio.paused) {
+                audio.volume = 0.3; 
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        textEl.innerText = "Fréquences ON";
+                        if(waves) waves.style.display = "block";
+                    }).catch(e => {
+                        console.log("Son bloqué:", e);
+                        textEl.innerText = "Audio";
+                    });
+                }
+            } else {
+                audio.pause();
+                textEl.innerText = "Fréquences";
+                if(waves) waves.style.display = "none";
+            }
+        }
+
+        function toggleFullScreen() {
+            const doc = window.document;
+            const docEl = doc.documentElement;
+
+            const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+            if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                if(requestFullScreen) {
+                    requestFullScreen.call(docEl).catch(err => console.log(err));
+                }
+            } else {
+                if(cancelFullScreen) {
+                    cancelFullScreen.call(doc);
+                }
+            }
+        }
+
+        function startExperience() {
+            if(audio.paused) {
+                audio.volume = 0.3;
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        document.getElementById('audio-text').innerText = "Fréquences ON";
+                        const waves = document.querySelector('.audio-waves');
+                        if(waves) waves.style.display = "block";
+                    }).catch(e => console.log(e));
+                }
+            }
+
+            try {
+                const docEl = window.document.documentElement;
+                const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+                if(requestFullScreen) {
+                    requestFullScreen.call(docEl).catch(err => console.log(err));
+                }
+            } catch (e) {
+                console.log(e);
+            }
+
+            const overlay = document.getElementById('welcome-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 800);
+        }
+
+        function showScreen(id) {
+            const screen = document.getElementById(id);
+            if (!screen) return;
+            
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            screen.classList.remove('active'); 
+            void screen.offsetWidth; 
+            screen.classList.add('active');
+            
+            const nav = document.querySelector('.bottom-nav');
+            if(id === 'paiement' || id === 'confirmation') {
+                nav.style.display = 'none';
+            } else {
+                nav.style.display = 'flex';
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(n => n.classList.remove('active'));
+                
+                if (id === 'home') navItems[0].classList.add('active');
+                else if (id === 'diag') navItems[1].classList.add('active');
+                else if (id === 'rdv') navItems[2].classList.add('active');
+                else if (id === 'profil') navItems[3].classList.add('active');
+            }
+            
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+
+        function navTo(id, el) { showScreen(id); }
+
+        function selectDiag(el, title, desc) {
+            document.querySelectorAll('.option-box').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('res-title').innerText = title;
+            document.getElementById('res-desc').innerText = desc;
+        }
+
+        function selectDay(el) {
+            document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function selectTime(el) {
+            document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function selectPayment(el) {
+            document.querySelectorAll('.payment-method').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>
